@@ -85,7 +85,8 @@ jobs:
       run: |
         npm ci
         npm run coverage
-        mv coverage/coverage-summary.json ${{ runner.temp }}/coverage-pr-summary.json
+        mv coverage/coverage-summary.json coverage-pr-summary.json
+        mv ${{ runner.temp }}/coverage-main-summary.json coverage-main-summary.json
     
     - name: Upload Coverage Artifacts
       uses: actions/upload-artifact@v4
@@ -93,8 +94,8 @@ jobs:
       with:
         name: coverage-data
         path: |
-          ${{ runner.temp }}/coverage-main-summary.json
-          ${{ runner.temp }}/coverage-pr-summary.json
+          coverage-main-summary.json
+          coverage-pr-summary.json
           coverage/
         retention-days: 14
 
