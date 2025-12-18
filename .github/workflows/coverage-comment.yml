@@ -60,7 +60,7 @@ jobs:
             let markdown = `### 🧪 Code Coverage\n\n`;
             
             markdown += `[⬇️ **Download Full Report**](${process.env.ARTIFACT_URL})\n\n`;
-            markdown += `| File | Main | PR | Delta |\n`;
+            markdown += `| Coverage | Main | PR | Delta |\n`;
             markdown += `| :--- | :---: | :---: | :---: |\n`;
 
             const metric = 'statements';
@@ -77,11 +77,6 @@ jobs:
               const diffStr = diff > 0 ? `+${diff}%` : `${diff}%`;
               return `${icon} ${diffStr}`;
             };
-
-            // Total Row
-            const oldTotalPct = getPct(mainSummary.total, metric);
-            const newTotalPct = getPct(prSummary.total, metric);
-            markdown += `| **Total** | ${oldTotalPct}% | ${newTotalPct}% | ${formatDiff(oldTotalPct, newTotalPct)} |\n`;
 
             const allFiles = new Set([...Object.keys(mainSummary), ...Object.keys(prSummary)]);
             allFiles.delete('total');
@@ -103,7 +98,14 @@ jobs:
             
             if (fileRows.length > 0) {
               markdown += fileRows.sort().join('');
-            } else {
+            }
+
+            // Total Row
+            const oldTotalPct = getPct(mainSummary.total, metric);
+            const newTotalPct = getPct(prSummary.total, metric);
+            markdown += `| **Total** | ${oldTotalPct}% | ${newTotalPct}% | ${formatDiff(oldTotalPct, newTotalPct)} |\n`;
+
+            if (fileRows.length === 0) {
               markdown += `\n_No coverage changes for individual files._\n`;
             }
 
