@@ -82,7 +82,9 @@ jobs:
             allFiles.delete('total');
             const workspacePath = process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE + '/' : ''; 
 
-            let fileRows = [];
+            let changedRows = [];
+            let newRows = [];
+            
             for (const file of allFiles) {
               const mainFile = mainSummary[file];
               const prFile = prSummary[file];
@@ -92,15 +94,18 @@ jobs:
 
               if (!mainFile && prFile) {
                  const relativeFilePath = file.replace(workspacePath, '');
-                 fileRows.push(`| \`${relativeFilePath}\` (**new**) | — | ${newPct}% | — |\n`);
+                 newRows.push(`| \`${relativeFilePath}\` (**new**) | — | ${newPct}% | — |\n`);
               } else if (oldPct !== newPct) {
                 const relativeFilePath = file.replace(workspacePath, '');
-                fileRows.push(`| \`${relativeFilePath}\` | ${oldPct}% | ${newPct}% | ${formatDiff(oldPct, newPct)} |\n`);
+                changedRows.push(`| \`${relativeFilePath}\` | ${oldPct}% | ${newPct}% | ${formatDiff(oldPct, newPct)} |\n`);
               }
             }
             
-            if (fileRows.length > 0) {
-              markdown += fileRows.sort().join('');
+            if (changedRows.length > 0) {
+              markdown += changedRows.sort().join('');
+            }
+            if (newRows.length > 0) {
+              markdown += newRows.sort().join('');
             }
 
             // Total Row
