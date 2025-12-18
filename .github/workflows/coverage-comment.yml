@@ -60,7 +60,7 @@ jobs:
             let markdown = `### 🧪 Code Coverage\n\n`;
             
             markdown += `[⬇️ **Download Full Report**](${process.env.ARTIFACT_URL})\n\n`;
-            markdown += `| Coverage | Main | PR | Delta |\n`;
+            markdown += `| | Main | PR | Delta |\n`;
             markdown += `| :--- | :---: | :---: | :---: |\n`;
 
             const metric = 'statements';
@@ -83,19 +83,19 @@ jobs:
             const workspacePath = process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE + '/' : ''; 
 
             let fileRows = [];
-            console.log(allFiles)
             for (const file of allFiles) {
-              console.log(file);
               const mainFile = mainSummary[file];
               const prFile = prSummary[file];
 
               const oldPct = getPct(mainFile, metric);
               const newPct = getPct(prFile, metric);
 
-              if (oldPct !== newPct || (!mainFile && prFile)) {
+              if (!mainFile && prFile) {
+                 const relativeFilePath = file.replace(workspacePath, '');
+                 fileRows.push(`| 🆕 \`${relativeFilePath}\` | n/a | ${newPct}% | n/a |\n`);
+              } else if (oldPct !== newPct) {
                 const relativeFilePath = file.replace(workspacePath, '');
-                const oldVal = mainFile ? `${oldPct}%` : '**New**';
-                fileRows.push(`| \`${relativeFilePath}\` | ${oldVal} | ${newPct}% | ${formatDiff(oldPct, newPct)} |\n`);
+                fileRows.push(`| \`${relativeFilePath}\` | ${oldPct}% | ${newPct}% | ${formatDiff(oldPct, newPct)} |\n`);
               }
             }
             
