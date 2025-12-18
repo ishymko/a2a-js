@@ -1,3 +1,3 @@
-export function test(s: string): string {
-  return s + s;
+export function test() {
+  console.log('test')
 }
