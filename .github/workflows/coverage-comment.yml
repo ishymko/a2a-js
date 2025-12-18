@@ -121,8 +121,10 @@ jobs:
               markdown += `\n#### Per-File Coverage Changes\n`;
               markdown += `| File | Lines | Statements | Functions | Branches |\n`;
               markdown += `| :--- | :---: | :---: | :---: | :---: |\n`;
+              const workspacePath = process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE + '/' : ''; 
               fileDiffs.forEach(diff => {
-                markdown += `| \`${diff.file}\` | ${diff.lines} | ${diff.statements} | ${diff.functions} | ${diff.branches} |\n`;
+                const relativeFilePath = diff.file.replace(workspacePath, '');
+                markdown += `| \`${relativeFilePath}\` | ${diff.lines} | ${diff.statements} | ${diff.functions} | ${diff.branches} |\n`;
               });
             } else {
               markdown += `\n\n✅ No changes in file coverage.`;
