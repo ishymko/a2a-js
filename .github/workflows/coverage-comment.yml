@@ -101,43 +101,31 @@ jobs:
               const mainFile = mainSummary[file];
               const prFile = prSummary[file];
 
-              const metricsData = {};
+              const diffMetrics = {};
               let hasDiff = false;
-
               metrics.forEach(metric => {
                 const oldPct = mainFile ? mainFile[metric].pct : 0;
                 const newPct = prFile ? prFile[metric].pct : 0;
                 if (oldPct !== newPct) {
                   hasDiff = true;
                 }
-                metricsData[metric] = { oldPct, newPct };
+                diffMetrics[metric] = formatDiff(oldPct, newPct);
               });
 
               if (hasDiff) {
-                fileDiffs.push({ file, metricsData });
+                fileDiffs.push({ file, ...diffMetrics });
               }
             }
 
             if (fileDiffs.length > 0) {
               markdown += `\n#### Per-File Coverage Changes\n`;
-              const workspacePath = process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE + '/' : '';
-              
+              markdown += `| File | Lines | Statements | Functions | Branches |\n`;
+              markdown += `| :--- | :---: | :---: | :---: | :---: |\n`;
+              const workspacePath = process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE + '/' : ''; 
               fileDiffs.forEach(diff => {
                 const relativeFilePath = diff.file.replace(workspacePath, '');
-                markdown += `\n<details>\n`;
-                markdown += `<summary><code>${relativeFilePath}</code></summary>\n\n`;
-                markdown += `| Metric | Main | PR | Delta |\n`;
-                markdown += `| :--- | :---: | :---: | :---: |\n`;
-                
-                metrics.forEach(metricName => {
-                  const data = diff.metricsData[metricName];
-                  const diffStr = formatDiff(data.oldPct, data.newPct);
-                  markdown += `| **${metricName}** | ${data.oldPct}% | ${data.newPct}% | ${diffStr} |\n`;
-                });
-                
-                markdown += `\n</details>\n`;
+                markdown += `| \`${relativeFilePath}\` | ${diff.lines} | ${diff.statements} | ${diff.functions} | ${diff.branches} |\n`;
               });
-
             } else {
               markdown += `\n\n✅ No changes in file coverage.`;
             }
