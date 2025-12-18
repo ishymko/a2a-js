@@ -83,7 +83,9 @@ jobs:
             const workspacePath = process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE + '/' : ''; 
 
             let fileRows = [];
+            console.log(allFiles)
             for (const file of allFiles) {
+              console.log(file);
               const mainFile = mainSummary[file];
               const prFile = prSummary[file];
 
