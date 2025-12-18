@@ -92,7 +92,7 @@ jobs:
 
               if (!mainFile && prFile) {
                  const relativeFilePath = file.replace(workspacePath, '');
-                 fileRows.push(`| 🆕 \`${relativeFilePath}\` | n/a | ${newPct}% | n/a |\n`);
+                 fileRows.push(`| \`${relativeFilePath}\` (**new**) | — | ${newPct}% | — |\n`);
               } else if (oldPct !== newPct) {
                 const relativeFilePath = file.replace(workspacePath, '');
                 fileRows.push(`| \`${relativeFilePath}\` | ${oldPct}% | ${newPct}% | ${formatDiff(oldPct, newPct)} |\n`);
