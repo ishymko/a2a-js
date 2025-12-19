@@ -63,8 +63,6 @@ jobs:
             let markdown = `### 🧪 Code Coverage\n\n`;
             
             markdown += `[⬇️ **Download Full Report**](${process.env.ARTIFACT_URL})\n\n`;
-            markdown += `| | Main | PR | Delta |\n`;
-            markdown += `| :--- | :---: | :---: | :---: |\n`;
 
             const metric = 'statements';
             const getPct = (summaryItem, m) => summaryItem && summaryItem[m] ? summaryItem[m].pct : 0;
@@ -108,17 +106,20 @@ jobs:
                 changedRows.push(`| ${linkedPath} | ${oldPct}% | ${newPct}% | ${formatDiff(oldPct, newPct)} |\n`);
               }
             }
-            
-            if (changedRows.length > 0) {
-              markdown += changedRows.sort().join('');
-            }
-            if (newRows.length > 0) {
-              markdown += newRows.sort().join('');
-            }
 
             if (changedRows.length === 0 && newRows.length === 0) {
               markdown += `\n_No coverage changes._\n`;
             } else {
+              markdown += `| | Main | PR | Delta |\n`;
+              markdown += `| :--- | :---: | :---: | :---: |\n`;
+              
+              if (changedRows.length > 0) {
+                markdown += changedRows.sort().join('');
+              }
+              if (newRows.length > 0) {
+                markdown += newRows.sort().join('');
+              }
+
               const oldTotalPct = getPct(mainSummary.total, metric);
               const newTotalPct = getPct(prSummary.total, metric);
               if (oldTotalPct !== newTotalPct) {
