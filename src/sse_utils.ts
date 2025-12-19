@@ -3,7 +3,9 @@
  * This module provides common SSE formatting and parsing functions.
  */
 
-import { test } from "./myfile.js";
+
+
+// Change
 
 // ============================================================================
 // SSE Headers
@@ -53,7 +55,6 @@ export interface SseEvent {
  * ```
  */
 export function formatSSEEvent(event: unknown): string {
-  test();
   return `data: ${JSON.stringify(event)}\n\n`;
 }
 
