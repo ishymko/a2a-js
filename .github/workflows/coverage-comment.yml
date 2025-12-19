@@ -41,7 +41,7 @@ jobs:
             const fs = require('fs');
 
             const { owner, repo } = context.repo;
-            const headSha = github.event.workflow_run.head_commit.id;
+            const headSha = context.payload.workflow_run.head_commit.id;
 
             const loadSummary = (path) => {
               try {
