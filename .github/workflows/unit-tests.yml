@@ -102,5 +102,5 @@ jobs:
           coverage-pr-summary.json
           coverage/
           PR_NUMBER
-        retention-days: 14
+        retention-days: 1
 
